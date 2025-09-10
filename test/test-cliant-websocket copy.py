@@ -1,17 +1,21 @@
-#!/usr/bin/env python
-
-"""Client using the asyncio API."""
-
+# trivia_client.py
 import asyncio
-from websockets.asyncio.client import connect
+import websockets
+import json
 
+async def play_trivia():
+    uri = "ws://localhost:8765"
+    async with websockets.connect(uri) as websocket:
+        while True:
+            # Receive a question or result
+            message = await websocket.recv()
+            data = json.loads(message)
 
-async def hello():
-    async with connect("ws://localhost:8765") as websocket:
-        await websocket.send("Hello world!")
-        message = await websocket.recv()
-        print(message)
+            if data["type"] == "question":
+                print(f"Question: {data['question']}")
+                answer = input("Your answer: ")
+                await websocket.send(json.dumps({"type": "answer", "answer": answer}))
+            elif data["type"] == "result":
+                print(data["result"])
 
-
-if __name__ == "__main__":
-    asyncio.run(hello())
+asyncio.run(play_trivia())

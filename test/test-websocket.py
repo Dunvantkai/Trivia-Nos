@@ -1,20 +1,45 @@
-#!/usr/bin/env python
-
-"""Echo server using the asyncio API."""
-
+# trivia_server.py
 import asyncio
-from websockets.asyncio.server import serve
+import websockets
+import random
+import json
 
+# Trivia questions
+questions = [
+    {"question": "Capital of Italy?", "answer": "Rome"},
+    {"question": "Largest planet in our solar system?", "answer": "Jupiter"},
+    {"question": "Who wrote '1984'?", "answer": "George Orwell"}
+]
 
-async def echo(websocket):
-    async for message in websocket:
-        await websocket.send(message)
+# Keep track of connected clients
+clients = set()
 
+async def send_question(websocket):
+    question = random.choice(questions)
+    await websocket.send(json.dumps({"type": "question", "question": question["question"]}))
+    return question["answer"]
+
+async def handler(websocket):
+    clients.add(websocket)
+    print("New player joined!")
+    try:
+        correct_answer = await send_question(websocket)
+
+        async for message in websocket:
+            data = json.loads(message)
+            if data["type"] == "answer":
+                if data["answer"].strip().lower() == correct_answer.lower():
+                    await websocket.send(json.dumps({"type": "result", "result": "Correct!"}))
+                    correct_answer = await send_question(websocket)  # Send a new question
+                else:
+                    await websocket.send(json.dumps({"type": "result", "result": "Wrong, try again!"}))
+    finally:
+        clients.remove(websocket)
+        print("Player disconnected.")
 
 async def main():
-    async with serve(echo, "localhost", 8765) as server:
-        await server.serve_forever()
+    async with websockets.serve(handler, "localhost", 8765):
+        print("Trivia server running on ws://localhost:8765")
+        await asyncio.Future()  # Run forever
 
-
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())
