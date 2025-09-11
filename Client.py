@@ -13,4 +13,5 @@ async def hello():
         print(f"Received: {response}")
 
 # Run the client
-asyncio.run(hello())
+while True:
+    asyncio.run(hello())
