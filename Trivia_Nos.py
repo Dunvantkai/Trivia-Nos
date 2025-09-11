@@ -8,9 +8,9 @@ root.title("Trivia Nos")
 root.geometry("1600x800")
 root.resizable(width=False, height=False)
 # -- hide tabs
-# style = ttk.Style()
-# style.layout("TNotebook", [])
-# style.layout("TNotebook.Tab", [])
+style = ttk.Style()
+style.layout("TNotebook", [])
+style.layout("TNotebook.Tab", [])
 # -- builds tabs
 notebook = ttk.Notebook(root)
 joinTab = Frame(notebook)
