@@ -1,6 +1,8 @@
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
+import json
+import os
 from PIL import Image, ImageTk
 #  -- Builds Window
 root = tk.Tk()
@@ -20,6 +22,21 @@ notebook.add(lobbyTab, text="Lobby")
 splashTab = Frame(notebook)
 notebook.add(splashTab, text="Splash")
 notebook.pack(expand=1, fill="both")
+# -- server
+servers = []
+
+def serverlist():
+    global servers
+    try:
+        with open("serverlist.json", "r") as f:
+            servers = json.load(f)
+    except FileNotFoundError:
+        servers = []
+    try:
+        with open("serverlist.json", "w") as f:
+            json.dump(servers, f, indent=4)
+    except PermissionError:
+        print("Issue creating serverlist.json")
 
 def jointab():
     join_bg_photo = Image.open("Backgrounds/Lobby.png")
@@ -50,13 +67,13 @@ def splashtab():
     titleArm2.place(relx=0.54, rely=0.00, anchor="n")
     title = Label(splashTab, text="Trivia-Nos", font=("Algerian", 40), padx=10, pady=10, bd=5, relief="solid", bg="lightgray")
     title.place(relx=0.48, rely=0.03, anchor="n")
+    Button(splashTab, text="▶", command=jointab, font=("bold", 40), padx=60, pady=2, bd=5, relief="solid", bg="lightgray").place(relx=0.48, rely=0.5, anchor="center")
     notebook.select(splashTab)
     print("Splash Tab Selected")
-    Button(splashTab, text="▶", command=jointab, font=("bold", 40), padx=60, pady=2, bd=5, relief="solid", bg="lightgray").place(relx=0.48, rely=0.5, anchor="center")
 
 def main():
+    serverlist()
     splashtab()
 
-# jointab()
 main()
 root.mainloop()
