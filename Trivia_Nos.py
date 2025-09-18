@@ -34,6 +34,9 @@ def serverlist():
             servers = json.load(f)
     except FileNotFoundError:
         servers = [ {"name": "Local Host", "ip": "127.0.0.1", "port": 25565} ]
+        saveServerlist(servers)
+
+def saveServerlist(servers):
     try:
         with open("serverlist.json", "w") as f:
             json.dump(servers, f, indent=4)
@@ -80,8 +83,10 @@ def serveraddtab():
 
 def save_server(name, ip, port):
     print(name, ip, port)
-    newServer = {f"name": {name}, "ip": {ip}, "port": {port}}
+    newServer = {"name": name, "ip": ip, "port": port}
     servers.append(newServer)
+    saveServerlist(servers)
+    jointab()
     
 def jointab():
     join_bg_photo = Image.open("Backgrounds/Lobby.png")
