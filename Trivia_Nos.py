@@ -61,15 +61,34 @@ def serveraddtab():
     tabname = Label(addServerTab, text="Servers", font=("Algerian", 30), padx=10, pady=2, bd=5, relief="solid", bg="lightgray")
     tabname.place(relx=0.48, rely=0.1682, anchor="n")
 
+    awindow = Frame(addServerTab, bg="#0d3b63", height=420, width=311, bd=3, relief="solid")
+    awindow.place(relx=0.48, rely=0.55, anchor="center")
+    nameTextBox = Entry(awindow, width=25)  
+    nameTextBox.place(relx=0.5, rely=0.2, anchor="center")
+    ipTextBox = Entry(awindow, width=25)
+    ipTextBox.place(relx=0.5, rely=0.4, anchor="center")
+    portTextBox = Entry(awindow, width=25)
+    portTextBox.place(relx=0.5, rely=0.6, anchor="center")
+
+    save = Button(awindow, text="Save", command=lambda: save_server(nameTextBox.get(), ipTextBox.get(), portTextBox.get()), font=("Arial", 20,), bd=3, relief="solid", bg="lightgray")
+    save.place(relx=0.7, rely=0.9, anchor="center")
+    back = Button(awindow, text="Back", command=jointab, font=("Arial", 20,), bd=3, relief="solid", bg="lightgray")
+    back.place(relx=0.3, rely=0.9, anchor="center")
+
     notebook.select(addServerTab)
     print("Add Server Tab Selected")
 
+def save_server(name, ip, port):
+    print(name, ip, port)
+    newServer = {f"name": {name}, "ip": {ip}, "port": {port}}
+    servers.append(newServer)
+    
 def jointab():
     join_bg_photo = Image.open("Backgrounds/Lobby.png")
     join_bg_photo = join_bg_photo.resize((1600, 800), Image.Resampling.LANCZOS)
     join_bg = ImageTk.PhotoImage(join_bg_photo)
     bg_label = Label(joinTab, image=join_bg)
-    bg_label.image = join_bg  # Keep a reference!
+    bg_label.image = join_bg  # Keep a refrance!
     bg_label.place(x=0, y=0, relwidth=1, relheight=1)
     titleArm1 = Frame(joinTab, height=25, width=10.5, bd=2, relief="solid", bg="lightgray")
     titleArm1.place(relx=0.42, rely=0.00, anchor="n")
@@ -85,11 +104,11 @@ def jointab():
     tabname = Label(joinTab, text="Servers", font=("Algerian", 30), padx=10, pady=2, bd=5, relief="solid", bg="lightgray")
     tabname.place(relx=0.48, rely=0.1682, anchor="n")
     # -- box
-    window = Frame(joinTab, bg="#0d3b63", height=420, width=311, bd=3, relief="solid") # width 311 #7b3e18
-    window.place(relx=0.48, rely=0.55, anchor="center")
-    listbox = Listbox(window, bg="lightgray", bd=3, relief="solid", highlightthickness=0)
+    jwindow = Frame(joinTab, bg="#0d3b63", height=420, width=311, bd=3, relief="solid") # width 311 #7b3e18
+    jwindow.place(relx=0.48, rely=0.55, anchor="center")
+    listbox = Listbox(jwindow, bg="lightgray", bd=3, relief="solid", highlightthickness=0)
     listbox.place(relx=0.5, rely=0.44, relwidth=0.9, relheight=0.8, anchor="center")
-    buttonbox = Frame(window, bg="#0d3b63", height=60, width=290)
+    buttonbox = Frame(jwindow, bg="#0d3b63", height=60, width=290)
     buttonbox.place(relx=0.5, rely=0.92, anchor="center")
     addbutton = Button(buttonbox, text="Add", command=serveraddtab, font=("Arial", 20,), bd=3, relief="solid", bg="lightgray")
     addbutton.place(relx=0.155, rely=0.5, anchor="center")
