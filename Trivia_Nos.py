@@ -146,7 +146,6 @@ def splashtab():
     notebook.select(splashTab)
     print("Splash Tab Selected")
 
-
 def main():
     serverlist()
     splashtab()
